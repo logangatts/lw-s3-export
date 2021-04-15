@@ -1,12 +1,12 @@
+resource "random_id" "uniq" {
+  byte_length = 4
+}
+
 locals {
   lambda_function_name = length(var.lambda_function_name) > 0 ? var.lambda_function_name : "${var.resource_prefix}-function-${random_id.uniq.hex}"
   lambda_role_name     = length(var.lambda_role_name) > 0 ? var.lambda_role_name : "${var.resource_prefix}-lambda-role-${random_id.uniq.hex}"
   event_rule_name      = length(var.event_rule_name) > 0 ? var.event_rule_name : "${var.resource_prefix}-event-rule-${random_id.uniq.hex}"
-  bucket_name          = length(var.bucket) > 0 ? var.bucket : "${var.resource_prefix}-${random_id.uniq.hex}"
-}
-
-resource "random_id" "uniq" {
-  byte_length = 4
+  bucket_name          = "${var.bucket}-${random_id.uniq.hex}"
 }
 
 # Create an event rule for events that cause changes to S3
