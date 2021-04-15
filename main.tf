@@ -53,7 +53,7 @@ resource "aws_lambda_function" "s3_export_handler" {
 
 # Create a Lambda layer containing the laceworksdk
 resource "aws_lambda_layer_version" "laceworksdk_layer" {
-  filename   = data.file.laceworksdk.destination
+  filename   = "${path.module}/lambda/python/laceworksdk_layer.zip"
   layer_name = "laceworksdk_layer"
 
   compatible_runtimes = ["python3.8"]
@@ -121,17 +121,4 @@ data "archive_file" "lambda_app" {
   output_path = "${path.module}/tmp/lambda_app.zip"
   source_dir  = "${path.module}/lambda/"
   excludes    = ["tests"]
-}
-
-# Zip the code for creating the Lambda layer
-#data "archive_file" "laceworksdk" {
-#  type        = "zip"
-#  output_path = "${path.module}/tmp/laceworksdk_layer.zip"
-#  source_dir  = "${path.module}/lambda/python/"
-#  excludes    = ["tests"]
-#}
-
-data "file" "laceworksdk" {
-    source = "${path.module}/lambda/laceworksdk_layer.zip"
-    destination = "${path.module}/tmp/laceworksdk_layer.zip"
 }
