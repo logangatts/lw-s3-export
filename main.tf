@@ -2,6 +2,7 @@ locals {
   lambda_function_name = length(var.lambda_function_name) > 0 ? var.lambda_function_name : "${var.resource_prefix}-function-${random_id.uniq.hex}"
   lambda_role_name     = length(var.lambda_role_name) > 0 ? var.lambda_role_name : "${var.resource_prefix}-lambda-role-${random_id.uniq.hex}"
   event_rule_name      = length(var.event_rule_name) > 0 ? var.event_rule_name : "${var.resource_prefix}-event-rule-${random_id.uniq.hex}"
+  bucket_name          = length(var.bucket) > 0 ? var.bucket : "${var.resource_prefix}-${random_id.uniq.hex}"
 }
 
 resource "random_id" "uniq" {
@@ -24,8 +25,8 @@ resource "aws_cloudwatch_event_target" "default" {
 }
 
 # Create the s3 bucket to store the compliance reports
-resource "aws_s3_bucket" "lw-s3-bucket" {
-  bucket = var.bucket
+resource "aws_s3_bucket" "lw-compliance-bucket" {
+  bucket = local.bucket_name
   acl    = "private"
 }
 
@@ -49,7 +50,7 @@ resource "aws_lambda_function" "s3_export_handler" {
   environment {
     variables = {
       aws_account_id = var.aws_account_id
-      bucket = var.bucket
+      bucket = local.bucket_name
       lw_acct = var.lw_acct
       lw_api_key = var.lw_api_key
       lw_api_secret = var.lw_api_secret
