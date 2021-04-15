@@ -6,7 +6,7 @@ import boto3
 from laceworksdk import LaceworkClient
 print('Loading function')
 s3 = boto3.client('s3')
-def s3_export(event, context):
+def lambda_handler(event, context):
     # Use enviroment variables to instantiate a LaceworkClient instance
     lacework_client = LaceworkClient(api_key=os.getenv('lw_api_key'),
                                      api_secret=os.getenv('lw_api_secret'),
