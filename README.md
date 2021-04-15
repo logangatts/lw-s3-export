@@ -16,10 +16,10 @@ This module will implement a CloudWatch rule on a daily schedule which triggers 
 | lambda_role_name     | The desired IAM role name for the S3 remediation lambda function             | `string`      | "lw-s3-export-lambda"         |
 | resource_prefix      | The name prefix to use for resources provisioned by the module               | `string`      | "s3-export" |
 | tags                 | A map of tags to be assigned to created resources                            | `map(string)` | `{}`             |
-| aws_account_id       | The AWS account ID of the desired compliance report to export.               | `string`      | "[input]"         |
-| lw_acct              | The Lacework account name from the API key file - Do not include the ".lacework.net" | `string`   | "[input]"         |
-| lw_api_key           | The Lacework keyID from the API key file                                     | `string`      | "[input]"        |
-| lw_api_secret.       | The Lacework secret from the API key file                                    | `string`      | "[input]"         |
+| aws_account_id       | The AWS account ID of the desired compliance report to export.               | `string`      | ""         |
+| lw_acct              | The Lacework account name from the API key file - Do not include the ".lacework.net" | `string`   | ""         |
+| lw_api_key           | The Lacework keyID from the API key file                                     | `string`      | ""        |
+| lw_api_secret.       | The Lacework secret from the API key file                                    | `string`      | ""         |
 
 ## Outputs
 
