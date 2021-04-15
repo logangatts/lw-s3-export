@@ -23,18 +23,24 @@ resource "aws_cloudwatch_event_target" "default" {
   arn  = aws_lambda_function.s3_export_handler.arn
 }
 
+# Create the s3 bucket to store the compliance reports
+resource "aws_s3_bucket" "lw-s3-bucket" {
+  bucket = var.bucket
+  acl    = "private"
+}
+
 # Create a Lambda Function for grabbing the compliance report and exporting
 resource "aws_lambda_function" "s3_export_handler" {
   function_name = local.lambda_function_name
 
   filename         = data.archive_file.lambda_app.output_path
   source_code_hash = data.archive_file.lambda_app.output_base64sha256
-  timeout = "2m"
+  timeout = 180
   handler = "lambda_function.lambda_handler"
   runtime = "python3.8"
 
   layers = [
-  aws_lambda_layer_version.laceworksdk_layer.this_lambda_layer_arn
+  aws_lambda_layer_version.laceworksdk_layer.arn
   ]
 
   role = aws_iam_role.lambda_execution.arn
@@ -53,7 +59,7 @@ resource "aws_lambda_function" "s3_export_handler" {
 
 # Create a Lambda layer containing the laceworksdk
 resource "aws_lambda_layer_version" "laceworksdk_layer" {
-  filename   = "${path.module}/lambda/python/laceworksdk_layer.zip"
+  filename   = "${path.module}/lambda/laceworksdk_layer.zip"
   layer_name = "laceworksdk_layer"
 
   compatible_runtimes = ["python3.8"]
